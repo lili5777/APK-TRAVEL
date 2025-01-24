@@ -8,6 +8,7 @@ import Destination from './src/screens/Destination';
 import Profile from './src/screens/Profile';
 import Login from './src/screens/Login';
 import Daftar from './src/screens/Daftar';
+import Register from './src/screens/Register';
 
 const Tab = createBottomTabNavigator();
 
@@ -66,6 +67,7 @@ function RootStack() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Daftar" component={Daftar} />
       <Stack.Screen name="MyTabs" component={MyTabs} />
     </Stack.Navigator>
