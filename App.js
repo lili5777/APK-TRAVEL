@@ -3,59 +3,11 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
-function Home() {
-  const navigation = useNavigation();
-
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Home Screen</Text>
-      <TouchableOpacity
-        style={{
-          backgroundColor: 'red',
-          height: 30,
-          width: 80,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        onPress={() => {
-          navigation.navigate('Details');
-        }}>
-        <Text>ke Details</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function Destination() {
-  const navigation = useNavigation();
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Details Screen</Text>
-      <TouchableOpacity
-        style={{
-          backgroundColor: 'red',
-          height: 30,
-          width: 80,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        onPress={() => {
-          navigation.navigate('Profile');
-        }}>
-        <Text>ke Profile</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function Profile() {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Profile Screen</Text>
-    </View>
-  );
-}
+import Home from './src/screens/Home';
+import Destination from './src/screens/Destination';
+import Profile from './src/screens/Profile';
+import Login from './src/screens/Login';
+import Daftar from './src/screens/Daftar';
 
 const Tab = createBottomTabNavigator();
 
@@ -98,6 +50,7 @@ function MyTabs() {
           height: 60,
           paddingBottom: 5,
         },
+        headerShown: false,
       })}
       initialRouteName="Home">
       <Tab.Screen name="Destination" component={Destination} />
@@ -111,7 +64,9 @@ const Stack = createNativeStackNavigator();
 
 function RootStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Daftar" component={Daftar} />
       <Stack.Screen name="MyTabs" component={MyTabs} />
     </Stack.Navigator>
   );
