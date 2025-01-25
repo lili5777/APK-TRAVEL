@@ -54,8 +54,8 @@ function MyTabs() {
         headerShown: false,
       })}
       initialRouteName="Home">
-      <Tab.Screen name="Destination" component={Destination} />
       <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Destination" component={Destination} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );

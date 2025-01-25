@@ -9,7 +9,7 @@ function Login() {
       {/* LOGO */}
       <View style={{paddingVertical: 30, marginTop: 120}}>
         <Image
-          source={require('./../assets/LOGO.png')}
+          source={require('./../assets/logo.png')}
           style={{
             height: 150,
             aspectRatio: 2, // Menjaga aspek rasio gambar (1:1 untuk persegi)
@@ -87,6 +87,7 @@ function Login() {
         {/* PASSWORD */}
         {/* PASSWORD */}
         <TouchableOpacity
+          onPress={() => navigation.replace('MyTabs')}
           style={{
             width: '100%',
             height: 50,
@@ -118,7 +119,7 @@ function Login() {
           <Text style={{color: '#5A6C57', fontSize: 20}}>
             Don’t have an account?
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <TouchableOpacity onPress={() => navigation.replace('Register')}>
             <Text style={{color: '#727D73', fontSize: 20}}> Sign up.</Text>
           </TouchableOpacity>
         </View>

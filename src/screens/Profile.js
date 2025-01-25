@@ -1,9 +1,26 @@
-import {Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
+import ImageHeader from '../components/ImageHeader';
 
 function Profile() {
+  const navigation = useNavigation();
+
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Profile Screen</Text>
+    <View style={{flex: 1, backgroundColor: '#FAEDCE'}}>
+      <ScrollView>
+        {/* HEADER */}
+
+        <ImageHeader />
+
+        {/* HEADER */}
+      </ScrollView>
     </View>
   );
 }

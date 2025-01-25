@@ -4,7 +4,7 @@ import {TouchableOpacity, View, Text} from 'react-native';
 function Destination() {
   const navigation = useNavigation();
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={{flex: 1, backgroundColor: '#FAEDCE'}}>
       <Text>Details Screen</Text>
       <TouchableOpacity
         style={{
