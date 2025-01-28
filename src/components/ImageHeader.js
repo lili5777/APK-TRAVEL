@@ -1,14 +1,7 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useEffect, useRef} from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import {View, Image, ScrollView, Dimensions} from 'react-native';
 
 function ImageHeader() {
   const width = Dimensions.get('screen').width;
@@ -65,7 +58,6 @@ function ImageHeader() {
               borderBottomLeftRadius: 60,
               borderBottomRightRadius: 60,
               marginTop: -13,
-              interval: 5,
             }}
             source={image}
           />

@@ -16,10 +16,82 @@ function Profile() {
     <View style={{flex: 1, backgroundColor: '#FAEDCE'}}>
       <ScrollView>
         {/* HEADER */}
-
         <ImageHeader />
-
         {/* HEADER */}
+        {/* FOTO Profile */}
+        <View style={{alignItems: 'center', marginVertical: -100}}>
+          <View
+            style={{
+              width: 160,
+              height: 160,
+              backgroundColor: '#727D73',
+              borderRadius: 80, // Membuat lingkaran
+              justifyContent: 'center',
+              alignItems: 'center',
+              elevation: 50,
+            }}>
+            <Text style={{color: 'white', fontWeight: 'bold'}}>Foto</Text>
+          </View>
+        </View>
+        {/* FOTO Profile */}
+        {/* USERNAME */}
+        <View
+          style={{
+            alignItems: 'center',
+            marginVertical: 100,
+          }}>
+          <Text
+            style={{
+              fontSize: 30,
+              fontStyle: 'italic',
+              fontWeight: 'bold',
+              height: 40,
+            }}>
+            Username.
+          </Text>
+        </View>
+        {/* USERNAME */}
+        {/* INFO */}
+        <View
+          style={{
+            paddingHorizontal: 30,
+            gap: 30,
+            marginVertical: -75,
+          }}>
+          <Text style={{fontSize: 20, color: '#555'}}>Nama : </Text>
+          <Text style={{fontSize: 20, color: '#555'}}>Tanggal Lahir :</Text>
+          <Text style={{fontSize: 20, color: '#555'}}>Contact :</Text>
+          <Text style={{fontSize: 20, color: '#555'}}>Cocial Media :</Text>
+          <Text style={{fontSize: 20, color: '#555'}}>
+            Password : **********
+            {/* GANTI PASSWORD */}
+            <TouchableOpacity>
+              <Text style={{fontSize: 20, color: '#5559'}}>
+                {' '}
+                ( change Password )
+              </Text>
+            </TouchableOpacity>
+            {/* GANTI PASSWORD */}
+          </Text>
+        </View>
+        {/* INFO */}
+        {/* LOG OUT */}
+        <TouchableOpacity
+          onPress={() => navigation.replace('Login')}
+          style={{
+            width: 120,
+            height: 40,
+            backgroundColor: '#727D73',
+            justifyContent: 'center',
+            alignSelf: 'center',
+            borderRadius: 10,
+            marginVertical: 95,
+          }}>
+          <Text style={{fontSize: 22, alignSelf: 'center', color: '#FAEDCE'}}>
+            Log Out
+          </Text>
+        </TouchableOpacity>
+        {/* LOG OUT */}
       </ScrollView>
     </View>
   );
