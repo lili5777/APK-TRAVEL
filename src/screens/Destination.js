@@ -44,55 +44,77 @@ function Destination() {
 
   return (
     <View style={{flex: 1, backgroundColor: '#FAEDCE'}}>
-      <ScrollView
-        ref={scrollViewRef}
-        horizontal={true}
-        style={{height: '100%', width: '100%', backgroundColor: '#FAEDCE'}}
-        showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={16} // Agar smooth
-        pagingEnabled={true} // Membuat scroll snap ke tiap halaman
-      >
-        {images.map((image, index) => (
-          <View
-            key={index}
-            style={{
-              height: 150,
-              backgroundColor: '#5A6C57',
-              borderBottomLeftRadius: 50,
-              borderBottomRightRadius: 50,
-            }}>
-            <Image
+      <View>
+        <ScrollView
+          ref={scrollViewRef}
+          horizontal={true}
+          contentContainerStyle={{height: 150}}
+          showsHorizontalScrollIndicator={false}
+          scrollEventThrottle={16} // Agar smooth
+          pagingEnabled={true} // Membuat scroll snap ke tiap halaman
+        >
+          {images.map((image, index) => (
+            <View
+              key={index}
               style={{
-                height: 160,
-                width: width,
-                borderBottomLeftRadius: 60,
-                borderBottomRightRadius: 60,
-                marginTop: 20,
-              }}
-              source={image}
-            />
-          </View>
-        ))}
+                height: 150,
+                backgroundColor: '#5A6C57',
+                borderBottomLeftRadius: 25,
+                borderBottomRightRadius: 25,
+              }}>
+              <Image
+                style={{
+                  height: 160,
+                  width: width,
+                  borderBottomLeftRadius: 60,
+                  borderBottomRightRadius: 60,
+                  marginTop: 20,
+                }}
+                source={image}
+              />
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+      <ScrollView contentContainerStyle={{padding: 20}}>
+        {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((item, index) => {
+          return (
+            <View
+              style={{
+                height: 100,
+                width: '100%',
+                backgroundColor: '#727D73',
+                marginBottom: 10,
+                borderRadius: 10,
+                elevation: 10,
+                padding: 10,
+              }}>
+              <Text style={{fontSize: 30, color: '#FAEDCE'}}>Tittle</Text>{' '}
+            </View>
+          );
+        })}
       </ScrollView>
+
       {/* TAMBAH */}
 
       <TouchableOpacity
         onPress={() => navigation.navigate('Diary')}
         style={{
-          width: 50,
-          height: 50,
-          backgroundColor: '#727D73',
+          width: 60,
+          height: 60,
+          backgroundColor: '#5A6C57',
           justifyContent: 'center',
-          alignSelf: 'center',
-          borderRadius: 25,
-          marginVertical: 100,
+          borderRadius: 30,
+          right: 20,
+          bottom: 20,
+          position: 'absolute',
         }}>
         <Text
           style={{
-            fontSize: 50,
-            alignSelf: 'center',
+            fontSize: 60,
             color: '#FAEDCE',
-            marginVertical: 'center',
+            alignSelf: 'center',
+            marginTop: -10,
           }}>
           +
         </Text>
