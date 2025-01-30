@@ -10,6 +10,7 @@ import Login from './src/screens/Login';
 import Daftar from './src/screens/Daftar';
 import Register from './src/screens/Register';
 import Diary from './src/screens/Diary';
+import Details from './src/screens/DEtails';
 
 const Tab = createBottomTabNavigator();
 
@@ -72,6 +73,7 @@ function RootStack() {
       <Stack.Screen name="Daftar" component={Daftar} />
       <Stack.Screen name="MyTabs" component={MyTabs} />
       <Stack.Screen name="Diary" component={Diary} />
+      <Stack.Screen name="Details" component={Details} />
     </Stack.Navigator>
   );
 }

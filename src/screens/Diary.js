@@ -30,10 +30,11 @@ function Diary() {
           alignSelf: 'flex-start',
           paddingHorizontal: 25,
           paddingVertical: 0,
+          color: 'black',
         }}
       />
       <TextInput
-        placeholder="Desc..."
+        placeholder="Description..."
         multiline
         placeholderTextColor={'#949494'}
         style={{
@@ -43,8 +44,26 @@ function Diary() {
         }}
       />
       {/* TITTLE */}
+      {/* TAMBAH GAMBAR */}
+      <TouchableOpacity>
+        <View style={{paddingHorizontal: 40}}>
+          <Image
+            source={require('./../assets/image.png')}
+            style={{height: 40, width: 40}}
+          />
+          <Image
+            source={require('./../assets/text.png')}
+            style={{
+              height: 25,
+              width: 10,
+              backgroundColor: 'red',
+              padding: 110,
+            }}
+          />
+        </View>
+      </TouchableOpacity>
+      {/* TAMBAH GAMBAR */}
       {/* SAVE */}
-
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={{
@@ -59,7 +78,6 @@ function Diary() {
           style={{height: 70, width: 70}}
         />
       </TouchableOpacity>
-
       {/* SAVE */}
     </View>
   );

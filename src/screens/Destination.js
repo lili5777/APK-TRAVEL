@@ -59,8 +59,8 @@ function Destination() {
               style={{
                 height: 150,
                 backgroundColor: '#5A6C57',
-                borderBottomLeftRadius: 25,
-                borderBottomRightRadius: 25,
+                borderBottomLeftRadius: 23,
+                borderBottomRightRadius: 23,
               }}>
               <Image
                 style={{
@@ -77,13 +77,13 @@ function Destination() {
         </ScrollView>
       </View>
       <ScrollView contentContainerStyle={{padding: 20}}>
-        {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((item, index) => {
+        {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((item, index) => {
           return (
             <View
               style={{
                 height: 100,
                 width: '100%',
-                backgroundColor: '#727D73',
+                backgroundColor: '#5A6C57',
                 marginBottom: 10,
                 borderRadius: 10,
                 elevation: 10,
@@ -100,24 +100,17 @@ function Destination() {
       <TouchableOpacity
         onPress={() => navigation.navigate('Diary')}
         style={{
-          width: 60,
-          height: 60,
-          backgroundColor: '#5A6C57',
+          width: 75,
+          height: 70,
           justifyContent: 'center',
-          borderRadius: 30,
           right: 20,
           bottom: 20,
           position: 'absolute',
         }}>
-        <Text
-          style={{
-            fontSize: 60,
-            color: '#FAEDCE',
-            alignSelf: 'center',
-            marginTop: -10,
-          }}>
-          +
-        </Text>
+        <Image
+          source={require('./../assets/plus.png')}
+          style={{height: 65, width: 65}}
+        />
       </TouchableOpacity>
       {/* TAMBAH */}
     </View>
