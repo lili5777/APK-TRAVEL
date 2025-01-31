@@ -7,6 +7,27 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+// import SQLite from 'react-native-sqlite-storage';
+import db from '../../database';
+
+// const db = SQLite.openDatabase({name: 'TravelDiaryDB.db', location: 'default'});
+
+console.log('db', db);
+
+db.transaction(tx => {
+  tx.executeSql(
+    "SELECT name FROM sqlite_master WHERE type='table' AND name='pengguna';",
+    [],
+    (_, results) => {
+      if (results.rows.length > 0) {
+        console.log('Tabel sudah ada');
+      } else {
+        console.log('Tabel belum dibuat');
+      }
+    },
+    error => console.log('Error checking table:', error),
+  );
+});
 
 function Login() {
   const navigation = useNavigation();
