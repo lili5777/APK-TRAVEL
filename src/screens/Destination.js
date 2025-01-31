@@ -8,7 +8,9 @@ import {
   Image,
   ScrollView,
   Dimensions,
+  Alert,
 } from 'react-native';
+import Details from './Details';
 
 function Destination() {
   const navigation = useNavigation();
@@ -79,7 +81,11 @@ function Destination() {
       <ScrollView contentContainerStyle={{padding: 20}}>
         {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((item, index) => {
           return (
-            <View
+            <TouchableOpacity
+              key={index}
+              onPress={() => {
+                navigation.navigate('Details');
+              }}
               style={{
                 height: 100,
                 width: '100%',
@@ -89,8 +95,8 @@ function Destination() {
                 elevation: 10,
                 padding: 10,
               }}>
-              <Text style={{fontSize: 30, color: '#FAEDCE'}}>Tittle</Text>{' '}
-            </View>
+              <Text style={{fontSize: 30, color: '#FAEDCE'}}>Title</Text>
+            </TouchableOpacity>
           );
         })}
       </ScrollView>

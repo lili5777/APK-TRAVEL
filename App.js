@@ -10,7 +10,9 @@ import Login from './src/screens/Login';
 import Daftar from './src/screens/Daftar';
 import Register from './src/screens/Register';
 import Diary from './src/screens/Diary';
-import Details from './src/screens/DEtails';
+import Details from './src/screens/Details';
+import Edit from './src/screens/Edit';
+import Password from './src/screens/Password';
 
 const Tab = createBottomTabNavigator();
 
@@ -74,6 +76,8 @@ function RootStack() {
       <Stack.Screen name="MyTabs" component={MyTabs} />
       <Stack.Screen name="Diary" component={Diary} />
       <Stack.Screen name="Details" component={Details} />
+      <Stack.Screen name="Edit" component={Edit} />
+      <Stack.Screen name="Password" component={Password} />
     </Stack.Navigator>
   );
 }

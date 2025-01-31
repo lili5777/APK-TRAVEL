@@ -33,6 +33,7 @@ function Home() {
         <View style={{padding: 20, gap: 10}}>
           {imagesBanner.map((image, index) => (
             <Image
+              key={index}
               style={{
                 height: 135.3,
                 width: '100%',

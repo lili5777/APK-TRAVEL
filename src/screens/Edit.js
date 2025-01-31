@@ -6,10 +6,11 @@ import {
   Image,
   ScrollView,
   Dimensions,
+  TextInput,
 } from 'react-native';
 import ImageHeader from '../components/ImageHeader';
 
-function Profile() {
+function Edit() {
   const navigation = useNavigation();
 
   return (
@@ -34,12 +35,25 @@ function Profile() {
           </View>
         </View>
         {/* FOTO Profile */}
-
+        {/* EDIT FOTO */}
+        <TouchableOpacity
+          style={{
+            alignItems: 'flex-end',
+            paddingVertical: 60,
+            paddingHorizontal: 80,
+            marginVertical: -10,
+          }}>
+          <Image
+            source={require('./../assets/pen.png')}
+            style={{width: 40, height: 40}}
+          />
+        </TouchableOpacity>
+        {/* EDIT FOTO */}
         {/* USERNAME */}
         <View
           style={{
             alignItems: 'center',
-            marginVertical: 100,
+            marginVertical: -40,
           }}>
           <Text
             style={{
@@ -53,23 +67,26 @@ function Profile() {
         </View>
         {/* USERNAME */}
         {/* EDIT */}
-        <TouchableOpacity onPress={() => navigation.navigate('Edit')}>
-          <View
+
+        <View
+          style={{
+            alignItems: 'center',
+            marginVertical: 30,
+          }}>
+          <TextInput
+            placeholder="Edit Bio"
+            placeholderTextColor={'#949494'}
             style={{
-              alignItems: 'center',
-              marginVertical: -100,
-            }}>
-            <Text
-              style={{
-                fontSize: 20,
-                fontStyle: 'italic',
-                fontWeight: 'bold',
-                height: 40,
-              }}>
-              Edit.
-            </Text>
-          </View>
-        </TouchableOpacity>
+              fontSize: 20,
+              fontStyle: 'italic',
+              fontWeight: 'bold',
+              height: 40,
+              width: 70,
+              color: 'black',
+            }}
+          />
+        </View>
+
         {/* EDIT */}
 
         {/* INFO */}
@@ -77,14 +94,42 @@ function Profile() {
           style={{
             paddingHorizontal: 30,
             gap: 30,
-            marginVertical: -50,
+            marginVertical: -20,
           }}>
           <Text style={{fontSize: 20, color: '#555'}}>Nama : </Text>
           <Text style={{fontSize: 20, color: '#555'}}>Tanggal Lahir :</Text>
           <Text style={{fontSize: 20, color: '#555'}}>Contact :</Text>
           <Text style={{fontSize: 20, color: '#555'}}>Cocial Media :</Text>
+          <Text style={{fontSize: 20, color: '#555'}}>
+            Password : **********
+            {/* GANTI PASSWORD */}
+            <TouchableOpacity onPress={() => navigation.navigate('Password')}>
+              <Text style={{fontSize: 20, color: '#5559'}}>
+                {' '}
+                ( change Password )
+              </Text>
+            </TouchableOpacity>
+            {/* GANTI PASSWORD */}
+          </Text>
         </View>
         {/* INFO */}
+        {/* Simpan */}
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            width: 120,
+            height: 40,
+            backgroundColor: '#727D73',
+            justifyContent: 'center',
+            alignSelf: 'center',
+            borderRadius: 10,
+            marginVertical: 35,
+          }}>
+          <Text style={{fontSize: 22, alignSelf: 'center', color: '#FAEDCE'}}>
+            Simpan
+          </Text>
+        </TouchableOpacity>
+        {/* Simpan */}
         {/* LOG OUT */}
         <TouchableOpacity
           onPress={() => navigation.replace('Login')}
@@ -95,7 +140,7 @@ function Profile() {
             justifyContent: 'center',
             alignSelf: 'center',
             borderRadius: 10,
-            marginVertical: 80,
+            marginVertical: -20,
           }}>
           <Text style={{fontSize: 22, alignSelf: 'center', color: '#FAEDCE'}}>
             Log Out
@@ -107,4 +152,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default Edit;

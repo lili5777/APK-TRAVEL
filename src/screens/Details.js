@@ -1,139 +1,81 @@
 import {useNavigation} from '@react-navigation/native';
+import {useEffect, useRef} from 'react';
 import {
-  Image,
-  ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
+  Image,
+  ScrollView,
+  Dimensions,
+  ImageBackground,
 } from 'react-native';
 
 function Details() {
   const navigation = useNavigation();
 
-  return (
-    <View style={{backgroundColor: '#FAEDCE', flex: 1}}>
-      {/* LOGO */}
-      <ScrollView>
-        <View style={{paddingVertical: 30, marginTop: 110}}>
-          <Image
-            source={require('./../assets/logo.png')}
-            style={{
-              height: 150,
-              aspectRatio: 2, // Menjaga aspek rasio gambar (1:1 untuk persegi)
-              alignSelf: 'center',
-            }}
-          />
-        </View>
-        {/* LOGO */}
+  const width = Dimensions.get('screen').width;
 
-        {/* TITTLE */}
-        <View
+  const scrollViewRef = useRef(null);
+
+  return (
+    <View style={{flex: 1, backgroundColor: '#FAEDCE'}}>
+      <ScrollView>
+        {/* HEADER */}
+
+        <ImageBackground
+          imageStyle={{
+            borderBottomLeftRadius: 60,
+            borderBottomRightRadius: 60,
+          }}
           style={{
-            alignItems: 'center',
+            height: 300,
+            width: width,
+
+            marginTop: -13,
+          }}
+          source={{
+            uri: 'https://www.litaofthepack.com/wp-content/uploads/2020/03/FullSizeRender-4.jpg',
           }}>
-          <Text style={{color: '#727D73', fontSize: 25}}>
-            Login To Your Account
-          </Text>
-        </View>
-        {/* TITTLE */}
-        {/* FORM */}
-        <View
-          style={{
-            //   minHeight: 300,
-            paddingHorizontal: 35,
-            paddingVertical: 20,
-            gap: 10,
-            //   overflow: 'hidden',
-          }}>
-          {/* USERNAME */}
-          <View
-            style={{
-              width: '100%',
-              height: 50,
-              backgroundColor: '#CCD5AE',
-              borderRadius: 10,
-              elevation: 5,
-              shadowColor: 'grey',
-              paddingHorizontal: 30,
-            }}>
-            <TextInput
-              placeholder="Username"
-              placeholderTextColor={'#949494'}
-              style={{
-                height: 50,
-                fontSize: 22,
-                justifyContent: 'center',
-                color: '#5A6C57',
-              }}
-            />
-          </View>
-          {/* USERNAME */}
-          {/* PASSWORD */}
-          <View
-            style={{
-              width: '100%',
-              height: 50,
-              backgroundColor: '#CCD5AE',
-              borderRadius: 10,
-              elevation: 5,
-              shadowColor: 'grey',
-              paddingHorizontal: 20,
-            }}>
-            <TextInput
-              secureTextEntry={true}
-              placeholder="Password"
-              placeholderTextColor={'#949494'}
-              style={{
-                height: 50,
-                fontSize: 22,
-                justifyContent: 'center',
-                color: '#5A6C57',
-              }}
-            />
-          </View>
-          {/* PASSWORD */}
-          {/* PASSWORD */}
-          <TouchableOpacity
-            onPress={() => navigation.replace('MyTabs')}
-            style={{
-              width: '100%',
-              height: 50,
-              backgroundColor: '#727D73',
-              borderRadius: 10,
-              elevation: 5,
-              shadowColor: 'grey',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text
-              style={{
-                fontSize: 22,
-                color: 'white',
-                fontSize: 25,
-              }}>
-              Sign In
-            </Text>
-          </TouchableOpacity>
-          {/* PASSWORD */}
-          {/* BELUM PUNYA AKUN */}
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              marginTop: 20,
-            }}>
-            <Text style={{color: '#5A6C57', fontSize: 20}}>
-              Don’t have an account?
-            </Text>
-            <TouchableOpacity onPress={() => navigation.replace('Register')}>
-              <Text style={{color: '#727D73', fontSize: 20}}> Sign up.</Text>
+          {/* BACK */}
+          <View style={{paddingHorizontal: 15, paddingVertical: 25}}>
+            <TouchableOpacity
+              style={{alignSelf: 'flex-start'}}
+              onPress={() => navigation.goBack()}>
+              <Image
+                source={require('./../assets/BACK.png')}
+                style={{height: 40, width: 88}}
+              />
             </TouchableOpacity>
           </View>
-          {/* BELUM PUNYA AKUN */}
-        </View>
-        {/* FORM */}
+          {/* BACK */}
+        </ImageBackground>
+        {/* HEADER */}
+        {/* CATATAN*/}
+        <Text
+          style={{
+            paddingHorizontal: 20,
+            fontSize: 40,
+            height: 40,
+          }}>
+          Title
+        </Text>
+        <Text
+          style={{
+            paddingHorizontal: 20,
+            fontSize: 25,
+            height: 40,
+          }}>
+          tanggal dibuat
+        </Text>
+        <Text
+          style={{
+            paddingHorizontal: 20,
+            fontSize: 25,
+            height: 30,
+          }}>
+          Description
+        </Text>
+        {/* CATATAN*/}
       </ScrollView>
     </View>
   );

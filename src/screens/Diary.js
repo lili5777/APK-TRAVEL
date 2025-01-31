@@ -22,7 +22,7 @@ function Diary() {
       {/* BACK */}
       {/* TITTLE */}
       <TextInput
-        placeholder="Tittle"
+        placeholder="Title"
         placeholderTextColor={'#949494'}
         style={{
           height: 56,
@@ -54,10 +54,11 @@ function Diary() {
           <Image
             source={require('./../assets/text.png')}
             style={{
-              height: 25,
-              width: 10,
-              backgroundColor: 'red',
-              padding: 110,
+              height: 20,
+              width: 64.9,
+              padding: 10,
+              left: 50,
+              bottom: 30,
             }}
           />
         </View>

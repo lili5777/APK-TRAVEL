@@ -1,21 +1,22 @@
 import {useNavigation} from '@react-navigation/native';
+import React from 'react';
 import {
   Image,
-  ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
+  TextInput,
+  ScrollView,
 } from 'react-native';
 
-function Login() {
+function Password() {
   const navigation = useNavigation();
 
   return (
     <View style={{backgroundColor: '#FAEDCE', flex: 1}}>
-      {/* LOGO */}
       <ScrollView>
-        <View style={{paddingVertical: 30, marginTop: 110}}>
+        {/* LOGO */}
+        <View style={{paddingVertical: 30, marginTop: 60}}>
           <Image
             source={require('./../assets/logo.png')}
             style={{
@@ -33,7 +34,7 @@ function Login() {
             alignItems: 'center',
           }}>
           <Text style={{color: '#727D73', fontSize: 25}}>
-            Login To Your Account
+            Gunakan Password Yang Kuat
           </Text>
         </View>
         {/* TITTLE */}
@@ -41,9 +42,9 @@ function Login() {
         <View
           style={{
             //   minHeight: 300,
-            paddingHorizontal: 35,
+            paddingHorizontal: 50,
             paddingVertical: 20,
-            gap: 10,
+            gap: 30,
             //   overflow: 'hidden',
           }}>
           {/* USERNAME */}
@@ -58,7 +59,7 @@ function Login() {
               paddingHorizontal: 30,
             }}>
             <TextInput
-              placeholder="Username"
+              placeholder="Password Lama"
               placeholderTextColor={'#949494'}
               style={{
                 height: 50,
@@ -82,7 +83,30 @@ function Login() {
             }}>
             <TextInput
               secureTextEntry={true}
-              placeholder="Password"
+              placeholder="Password Baru"
+              placeholderTextColor={'#949494'}
+              style={{
+                height: 50,
+                fontSize: 22,
+                justifyContent: 'center',
+                color: '#5A6C57',
+              }}
+            />
+          </View>
+          {/* PASSWORD */}
+          <View
+            style={{
+              width: '100%',
+              height: 50,
+              backgroundColor: '#CCD5AE',
+              borderRadius: 10,
+              elevation: 5,
+              shadowColor: 'grey',
+              paddingHorizontal: 20,
+            }}>
+            <TextInput
+              secureTextEntry={true}
+              placeholder="Confirm Password"
               placeholderTextColor={'#949494'}
               style={{
                 height: 50,
@@ -95,7 +119,7 @@ function Login() {
           {/* PASSWORD */}
           {/* PASSWORD */}
           <TouchableOpacity
-            onPress={() => navigation.replace('MyTabs')}
+            onPress={() => navigation.replace('Edit')}
             style={{
               width: '100%',
               height: 50,
@@ -112,26 +136,11 @@ function Login() {
                 color: 'white',
                 fontSize: 25,
               }}>
-              Sign In
+              Simpan
             </Text>
           </TouchableOpacity>
           {/* PASSWORD */}
-          {/* BELUM PUNYA AKUN */}
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              marginTop: 20,
-            }}>
-            <Text style={{color: '#5A6C57', fontSize: 20}}>
-              Don’t have an account?
-            </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <Text style={{color: '#727D73', fontSize: 20}}> Sign up.</Text>
-            </TouchableOpacity>
-          </View>
-          {/* BELUM PUNYA AKUN */}
+          {/* PASSWORD */}
         </View>
         {/* FORM */}
       </ScrollView>
@@ -139,4 +148,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Password;
