@@ -32,7 +32,28 @@ const createUserTables = () => {
   });
 };
 
+// BIKIN TABEL DESTINASI
+const createDestinationTables = () => {
+  db.transaction(tx => {
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS destinasi (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  judul TEXT,
+                  deskripsi TEXT,
+                  gambar TEXT,
+                  tgl_deskripsi TEXT,
+                  tgl_dibuat TEXT
+              );`,
+      [],
+      () => {},
+      error => {
+        console.error('Error creating tables:', error);
+      },
+    );
+  });
+};
+
 // Initialize database
 createUserTables();
+createDestinationTables();
 
 export default db;

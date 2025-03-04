@@ -41,6 +41,7 @@ function Diary() {
           fontSize: 20,
           alignSelf: 'flex-start',
           paddingHorizontal: 40,
+          color: 'black',
         }}
       />
       {/* TITTLE */}

@@ -75,14 +75,16 @@ function Edit() {
           }}>
           <TextInput
             placeholder="Edit Bio"
+            multiline
             placeholderTextColor={'#949494'}
             style={{
               fontSize: 20,
               fontStyle: 'italic',
               fontWeight: 'bold',
               height: 40,
-              width: 70,
+              width: 350,
               color: 'black',
+              textAlign: 'center',
             }}
           />
         </View>

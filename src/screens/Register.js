@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   Text,
@@ -7,10 +7,102 @@ import {
   View,
   TextInput,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
+import AlertView from '../components/AlertView';
+import db from '../../database';
 
 function Register() {
   const navigation = useNavigation();
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [message, setMessage] = useState('');
+  const [type, setType] = useState('');
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  function showAlert() {
+    setAlertVisible(true);
+  }
+  // HANDLE REGISTER
+  function handelRegister() {
+    if (username.length === 0) {
+      showAlert();
+      setMessage('Username Tidak Boleh Kosong !');
+      setType('error');
+    } else if (password !== confirm) {
+      showAlert();
+      setMessage('Konfirmasi password tidak sesuai !');
+      setType('error');
+    } else {
+      isUsernameAvailable(username, available => {
+        if (available) {
+          saveData({username, password});
+        } else {
+          showAlert();
+          setMessage('Username Sudah Digunakan !');
+          setType('error');
+        }
+      });
+    }
+  }
+  // HANDLE REGISTER
+
+  const isUsernameAvailable = (username, callback) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT COUNT(*) AS count FROM pengguna WHERE username = ?;',
+        [username],
+        (_, result) => {
+          const count = result.rows.item(0).count;
+          callback(count === 0); // Jika count = 0, berarti username tersedia
+        },
+        (_, error) => {
+          console.error('Gagal mengecek username:', error);
+          callback(false);
+        },
+      );
+    });
+  };
+
+  // SIMPAN DATA REGISTER USER KE DATABASE
+  function saveData(data) {
+    console.log(data.username, data.password);
+
+    setIsLoading(true);
+    // const currentDate = new Date().toISOString();
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO pengguna (username, password) VALUES (?, ?)',
+        [data.username, data.password],
+        () => {
+          console.log('Data saved successfully!');
+          setTimeout(() => {
+            setIsLoading(false);
+            showAlert();
+            setMessage('Berhasil !');
+            setType('success');
+            navigation.navigate('Login');
+          }, 1000);
+        },
+        error => {
+          console.error('Error saving data:', error);
+          setTimeout(() => {
+            setIsLoading(false);
+            showAlert();
+            setMessage('Gagal !');
+            setType('error');
+          }, 1000);
+        },
+      );
+    });
+  }
+  // SIMPAN DATA REGISTER USER KE DATABASE
 
   return (
     <View style={{backgroundColor: '#FAEDCE', flex: 1}}>
@@ -56,9 +148,10 @@ function Register() {
               borderRadius: 10,
               elevation: 5,
               shadowColor: 'grey',
-              paddingHorizontal: 30,
+              paddingHorizontal: 20,
             }}>
             <TextInput
+              onChangeText={text => setUsername(text)}
               placeholder="Username"
               placeholderTextColor={'#949494'}
               style={{
@@ -82,6 +175,7 @@ function Register() {
               paddingHorizontal: 20,
             }}>
             <TextInput
+              onChangeText={text => setPassword(text)}
               secureTextEntry={true}
               placeholder="Password"
               placeholderTextColor={'#949494'}
@@ -105,6 +199,7 @@ function Register() {
               paddingHorizontal: 20,
             }}>
             <TextInput
+              onChangeText={text => setConfirm(text)}
               secureTextEntry={true}
               placeholder="Confirm Password"
               placeholderTextColor={'#949494'}
@@ -119,7 +214,8 @@ function Register() {
           {/* PASSWORD */}
           {/* PASSWORD */}
           <TouchableOpacity
-            onPress={() => navigation.replace('Login')}
+            disabled={isLoading}
+            onPress={() => handelRegister()}
             style={{
               width: '100%',
               height: 50,
@@ -130,14 +226,18 @@ function Register() {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text
-              style={{
-                fontSize: 22,
-                color: 'white',
-                fontSize: 25,
-              }}>
-              Sign Up
-            </Text>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text
+                style={{
+                  fontSize: 22,
+                  color: 'white',
+                  fontSize: 25,
+                }}>
+                Sign Up
+              </Text>
+            )}
           </TouchableOpacity>
           {/* PASSWORD */}
           {/* PASSWORD */}
@@ -160,6 +260,12 @@ function Register() {
         </View>
         {/* FORM */}
       </ScrollView>
+      <AlertView
+        message={message}
+        visible={alertVisible}
+        onHide={() => setAlertVisible(false)}
+        type={type}
+      />
     </View>
   );
 }

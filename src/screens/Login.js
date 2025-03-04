@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
 import {
   Image,
   ScrollView,
@@ -9,28 +10,46 @@ import {
 } from 'react-native';
 // import SQLite from 'react-native-sqlite-storage';
 import db from '../../database';
-
-// const db = SQLite.openDatabase({name: 'TravelDiaryDB.db', location: 'default'});
-
-console.log('db', db);
-
-db.transaction(tx => {
-  tx.executeSql(
-    "SELECT name FROM sqlite_master WHERE type='table' AND name='pengguna';",
-    [],
-    (_, results) => {
-      if (results.rows.length > 0) {
-        console.log('Tabel sudah ada');
-      } else {
-        console.log('Tabel belum dibuat');
-      }
-    },
-    error => console.log('Error checking table:', error),
-  );
-});
+import AlertView from '../components/AlertView';
 
 function Login() {
   const navigation = useNavigation();
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [message, setMessage] = useState('');
+  const [type, setType] = useState('');
+
+  function showAlert() {
+    setAlertVisible(true);
+  }
+  // HANDLE Login
+  function handelLogin() {
+    db.transaction(tx => {
+      tx.executeSql(
+        `SELECT * FROM pengguna WHERE username = ? AND password = ?`, // Hapus LIMIT dan OFFSET
+        [username, password],
+        (_, results) => {
+          const rows = results.rows.raw();
+          if (rows.length === 0) {
+            console.log('gagal masuk');
+            showAlert();
+            setMessage('Gagal !');
+            setType('error');
+          } else {
+            console.log('berhasil masuk');
+            navigation.replace('MyTabs');
+          }
+        },
+        error => {
+          console.error('Error fetching data:', error);
+        },
+      );
+    });
+  }
+  // HANDLE Login
 
   return (
     <View style={{backgroundColor: '#FAEDCE', flex: 1}}>
@@ -79,6 +98,7 @@ function Login() {
               paddingHorizontal: 30,
             }}>
             <TextInput
+              onChangeText={text => setUsername(text)}
               placeholder="Username"
               placeholderTextColor={'#949494'}
               style={{
@@ -86,6 +106,7 @@ function Login() {
                 fontSize: 22,
                 justifyContent: 'center',
                 color: '#5A6C57',
+                paddingHorizontal: -100,
               }}
             />
           </View>
@@ -99,9 +120,10 @@ function Login() {
               borderRadius: 10,
               elevation: 5,
               shadowColor: 'grey',
-              paddingHorizontal: 20,
+              paddingHorizontal: 25,
             }}>
             <TextInput
+              onChangeText={text => setPassword(text)}
               secureTextEntry={true}
               placeholder="Password"
               placeholderTextColor={'#949494'}
@@ -116,7 +138,7 @@ function Login() {
           {/* PASSWORD */}
           {/* PASSWORD */}
           <TouchableOpacity
-            onPress={() => navigation.replace('MyTabs')}
+            onPress={() => handelLogin()}
             style={{
               width: '100%',
               height: 50,
@@ -156,6 +178,12 @@ function Login() {
         </View>
         {/* FORM */}
       </ScrollView>
+      <AlertView
+        message={message}
+        visible={alertVisible}
+        onHide={() => setAlertVisible(false)}
+        type={type}
+      />
     </View>
   );
 }
