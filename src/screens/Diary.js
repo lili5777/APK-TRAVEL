@@ -1,8 +1,49 @@
 import {useNavigation} from '@react-navigation/native';
+import {useState} from 'react';
 import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import db from '../../database';
 
 function Diary() {
   const navigation = useNavigation();
+
+  const [judul, setJudul] = useState('');
+  const [deskripsi, setDeskripsi] = useState('');
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  //Handle catatan
+  function HandleCatatan() {
+    saveData({judul, deskripsi});
+  }
+  //Handle catatan
+
+  //SIMPAN DATA CATATAN DESTINASI KE DATABASE
+  function saveData(data) {
+    console.log(data.judul, data.deskripsi);
+
+    setIsLoading(true);
+
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO destinasi (judul, deskripsi) VALUES (?, ?)',
+        [data.judul, data.deskripsi],
+        () => {
+          console.log('Data saved succesfully!');
+          setTimeout(() => {
+            setIsLoading(false);
+            navigation.goBack();
+          }, 100);
+        },
+        error => {
+          console.error('Error saving data:', error);
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 1000);
+        },
+      );
+    });
+  }
+  //SIMPAN DATA CATATAN DESTINASI KE DATABASE
 
   return (
     <View
@@ -22,6 +63,7 @@ function Diary() {
       {/* BACK */}
       {/* TITTLE */}
       <TextInput
+        onChangeText={text => setJudul(text)}
         placeholder="Title"
         placeholderTextColor={'#949494'}
         style={{
@@ -34,6 +76,7 @@ function Diary() {
         }}
       />
       <TextInput
+        onChangeText={text => setDeskripsi(text)}
         placeholder="Description..."
         multiline
         placeholderTextColor={'#949494'}
@@ -67,7 +110,7 @@ function Diary() {
       {/* TAMBAH GAMBAR */}
       {/* SAVE */}
       <TouchableOpacity
-        onPress={() => navigation.goBack()}
+        onPress={() => HandleCatatan()}
         style={{
           justifyContent: 'center',
           borderRadius: 30,
