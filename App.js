@@ -6,13 +6,11 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from './src/screens/Home';
 import Destination from './src/screens/Destination';
 import Profile from './src/screens/Profile';
-import Login from './src/screens/Login';
 import Daftar from './src/screens/Daftar';
-import Register from './src/screens/Register';
 import Diary from './src/screens/Diary';
 import Details from './src/screens/Details';
 import Edit from './src/screens/Edit';
-import Password from './src/screens/Password';
+import SplashScreen from './src/screens/SplashScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -70,14 +68,12 @@ const Stack = createNativeStackNavigator();
 function RootStack() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="SplashScreen" component={SplashScreen} />
       <Stack.Screen name="Daftar" component={Daftar} />
       <Stack.Screen name="MyTabs" component={MyTabs} />
       <Stack.Screen name="Diary" component={Diary} />
       <Stack.Screen name="Details" component={Details} />
       <Stack.Screen name="Edit" component={Edit} />
-      <Stack.Screen name="Password" component={Password} />
     </Stack.Navigator>
   );
 }

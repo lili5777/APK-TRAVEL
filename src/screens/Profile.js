@@ -8,9 +8,33 @@ import {
   Dimensions,
 } from 'react-native';
 import ImageHeader from '../components/ImageHeader';
+import {useEffect} from 'react';
+import db from '../../database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Profile() {
   const navigation = useNavigation();
+
+  const getUsers = setUsername => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM pengguna;',
+        [],
+        (_, {rows}) => {
+          let data = [];
+          for (let i = 0; i < rows.length; i++) {
+            data.push(rows.item(i));
+          }
+          setUsers(data);
+        },
+        (_, error) => console.log('Gagal mengambil data', error),
+      );
+    });
+  };
+
+  useEffect(() => {
+    getUsers();
+  });
 
   return (
     <View style={{flex: 1, backgroundColor: '#FAEDCE'}}>
@@ -87,7 +111,13 @@ function Profile() {
         {/* INFO */}
         {/* LOG OUT */}
         <TouchableOpacity
-          onPress={() => navigation.replace('Login')}
+          onPress={async () => {
+            await AsyncStorage.removeItem('userId');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Login'}],
+            });
+          }}
           style={{
             width: 120,
             height: 40,
@@ -97,9 +127,6 @@ function Profile() {
             borderRadius: 10,
             marginVertical: 80,
           }}>
-          <Text style={{fontSize: 22, alignSelf: 'center', color: '#FAEDCE'}}>
-            Log Out
-          </Text>
         </TouchableOpacity>
         {/* LOG OUT */}
       </ScrollView>

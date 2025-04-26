@@ -1,6 +1,15 @@
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
-import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Modal,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import db from '../../database';
 
 function Diary() {
@@ -8,18 +17,21 @@ function Diary() {
 
   const [judul, setJudul] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  //Handle catatan
+  // Handle catatan
   function HandleCatatan() {
     saveData({judul, deskripsi});
   }
-  //Handle catatan
+  // Handle catatan
 
-  //SIMPAN DATA CATATAN DESTINASI KE DATABASE
+  // SIMPAN DATA CATATAN DESTINASI KE DATABASE
   function saveData(data) {
-    console.log(data.judul, data.deskripsi);
+    if (!data.judul || !data.deskripsi) {
+      setIsModalVisible(true); // Show the modal
+      return;
+    }
 
     setIsLoading(true);
 
@@ -43,7 +55,11 @@ function Diary() {
       );
     });
   }
-  //SIMPAN DATA CATATAN DESTINASI KE DATABASE
+  // SIMPAN DATA CATATAN DESTINASI KE DATABASE
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
 
   return (
     <View
@@ -51,6 +67,12 @@ function Diary() {
         flex: 1,
         backgroundColor: '#FAEDCE',
       }}>
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      )}
+
       {/* BACK */}
       <View style={{padding: 15}}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -124,8 +146,75 @@ function Diary() {
         />
       </TouchableOpacity>
       {/* SAVE */}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={closeModal}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              Judul dan Deskripsi tidak boleh kosong!
+            </Text>
+            <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
+              <Text style={styles.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  modalView: {
+    backgroundColor: '#FAEDCE',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    color: 'black',
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize: 18,
+  },
+  modalButton: {
+    backgroundColor: '#5A6C57',
+    padding: 10,
+    borderRadius: 5,
+    elevation: 2,
+  },
+  modalButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  loadingContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent background
+  },
+});
 
 export default Diary;

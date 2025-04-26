@@ -39,8 +39,8 @@ function ImageHeader() {
       horizontal={true}
       style={{height: '100%', width: '100%'}}
       showsHorizontalScrollIndicator={false}
-      scrollEventThrottle={16} // Agar smooth
-      pagingEnabled={true} // Membuat scroll snap ke tiap halaman
+      scrollEventThrottle={16} 
+      pagingEnabled={true} 
     >
       {images.map((image, index) => (
         <View

@@ -1,5 +1,5 @@
-import React from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React, {useCallback, useState} from 'react';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useEffect, useRef} from 'react';
 import {
   Text,
@@ -9,8 +9,10 @@ import {
   ScrollView,
   Dimensions,
   Alert,
+  RefreshControl,
 } from 'react-native';
 import Details from './Details';
+import db from '../../database';
 
 function Destination() {
   const navigation = useNavigation();
@@ -18,6 +20,8 @@ function Destination() {
   const width = Dimensions.get('screen').width;
 
   const scrollViewRef = useRef(null);
+
+  const [destinasi, setDestinasi] = useState([]);
 
   const images = [
     require('./../assets/pantaiD.png'),
@@ -43,6 +47,48 @@ function Destination() {
 
     return () => clearInterval(interval); // Bersihkan interval saat komponen unmount
   }, []);
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getDestination();
+    }, [])
+  );
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getDestination();
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  function getDestination() {
+    db.transaction(tx => {
+      tx.executeSql(
+        `SELECT * FROM destinasi ORDER BY id DESC  `, // Hapus LIMIT dan OFFSET
+        [],
+        (_, results) => {
+          const rows = results.rows.raw();
+          if (rows.length === 0) {
+            setDestinasi([]);
+            console.log('tidak ada data');
+            setType('error');
+          } else {
+            console.log('berhasil memuat');
+            setDestinasi(rows);
+            console.log(rows);
+          }
+        },
+        error => {
+          setDestinasi([]);
+          console.error('Error fetching data:', error);
+        },
+      );
+    });
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: '#FAEDCE'}}>
@@ -78,13 +124,19 @@ function Destination() {
           ))}
         </ScrollView>
       </View>
-      <ScrollView contentContainerStyle={{padding: 20}}>
-        {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((item, index) => {
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        contentContainerStyle={{padding: 20}}>
+        {destinasi.map((item, index) => {
           return (
             <TouchableOpacity
               key={index}
               onPress={() => {
-                navigation.navigate('Details');
+                navigation.navigate('Details', {
+                  dataDestinasi: item,
+                });
               }}
               style={{
                 height: 100,
@@ -95,7 +147,10 @@ function Destination() {
                 elevation: 10,
                 padding: 10,
               }}>
-              <Text style={{fontSize: 30, color: '#FAEDCE'}}>Title</Text>
+              <Text style={{fontSize: 30, color: '#FAEDCE'}}>{item.judul}</Text>
+              <Text style={{fontSize: 15, color: '#FAEDCE', marginTop: 10}}>
+                {item.deskripsi}
+              </Text>
             </TouchableOpacity>
           );
         })}

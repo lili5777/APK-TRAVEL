@@ -18,7 +18,8 @@ const createUserTables = () => {
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS pengguna (id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT,
-                password TEXT,
+                bio TEXT,
+                nama TEXT,
                 tgl_lahir TEXT,
                 contact TEXT,
                 social_media TEXT
@@ -36,13 +37,14 @@ const createUserTables = () => {
 const createDestinationTables = () => {
   db.transaction(tx => {
     tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS destinasi (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                  judul TEXT,
-                  deskripsi TEXT,
-                  gambar TEXT,
-                  tgl_deskripsi TEXT,
-                  tgl_dibuat TEXT
-              );`,
+      `CREATE TABLE IF NOT EXISTS destinasi (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        judul TEXT,
+        deskripsi TEXT,
+        gambar TEXT,
+        tgl_deskripsi TEXT,
+        tgl_dibuat TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );`,
       [],
       () => {},
       error => {
