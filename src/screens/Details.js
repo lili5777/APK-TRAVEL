@@ -51,6 +51,21 @@ function Details({route}) {
     });
   }
 
+  function convertDate(timestamp) {
+    console.log(timestamp);
+
+    const date = new Date(timestamp);
+
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+  
+    return date.toLocaleDateString('id-ID', options);
+  }
+
   return (
     <View style={{flex: 1, backgroundColor: '#FAEDCE'}}>
       <ScrollView>
@@ -68,7 +83,7 @@ function Details({route}) {
             marginTop: -13,
           }}
           source={{
-            uri: 'https://www.litaofthepack.com/wp-content/uploads/2020/03/FullSizeRender-4.jpg',
+            uri:dataDestinasi.gambar || "https://www.litaofthepack.com/wp-content/uploads/2020/03/FullSizeRender-4.jpg",
           }}>
           {/* BACK */}
           <View style={{paddingHorizontal: 15, paddingVertical: 25}}>
@@ -101,7 +116,7 @@ function Details({route}) {
               fontSize: 15,
               height: 40,
             }}>
-            {`Tanggal Dibuat: ${dataDestinasi.tgl_dibuat}`}
+            {`Tanggal Dibuat: ${convertDate(dataDestinasi.tgl_dibuat)}`}
           </Text>
           <Text
             style={{

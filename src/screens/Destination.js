@@ -1,5 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {launchImageLibrary} from 'react-native-image-picker';
 import {useEffect, useRef} from 'react';
 import {
   Text,
@@ -48,11 +49,10 @@ function Destination() {
     return () => clearInterval(interval); // Bersihkan interval saat komponen unmount
   }, []);
 
-
   useFocusEffect(
     React.useCallback(() => {
       getDestination();
-    }, [])
+    }, []),
   );
 
   const [refreshing, setRefreshing] = useState(false);
@@ -88,6 +88,21 @@ function Destination() {
         },
       );
     });
+  }
+
+  function convertDate(timestamp) {
+    console.log(timestamp);
+
+    const date = new Date(timestamp);
+
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+  
+    return date.toLocaleDateString('id-ID', options);
   }
 
   return (
@@ -148,6 +163,9 @@ function Destination() {
                 padding: 10,
               }}>
               <Text style={{fontSize: 30, color: '#FAEDCE'}}>{item.judul}</Text>
+              <Text style={{fontSize: 15, color: '#FAEDCE'}}>
+                {convertDate(item.tgl_dibuat)}
+              </Text>
               <Text style={{fontSize: 15, color: '#FAEDCE', marginTop: 10}}>
                 {item.deskripsi}
               </Text>

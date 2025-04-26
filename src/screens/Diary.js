@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import db from '../../database';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 function Diary() {
   const navigation = useNavigation();
@@ -22,7 +23,7 @@ function Diary() {
 
   // Handle catatan
   function HandleCatatan() {
-    saveData({judul, deskripsi});
+    saveData({judul, deskripsi, imageUri});
   }
   // Handle catatan
 
@@ -37,8 +38,8 @@ function Diary() {
 
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO destinasi (judul, deskripsi) VALUES (?, ?)',
-        [data.judul, data.deskripsi],
+        'INSERT INTO destinasi (judul, deskripsi, gambar, tgl_dibuat ) VALUES (?, ?, ?, ?)',
+        [data.judul, data.deskripsi, data.imageUri, new Date],
         () => {
           console.log('Data saved succesfully!');
           setTimeout(() => {
@@ -60,6 +61,33 @@ function Diary() {
   const closeModal = () => {
     setIsModalVisible(false);
   };
+
+  const [imageUri, setImageUri] = useState(null);
+  const [imageName, setImageName] = useState(null);
+
+  const options = {
+    mediaType: 'photo',
+    includeBase64: false,
+    maxHeight: 2000,
+    maxWidth: 2000,
+  };
+
+  const handleChoosePhoto = () => {
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+        Alert.alert('Error', 'Failed to select image.  Please try again.');
+      } else {
+        const source = {uri: response.assets[0].uri};
+        console.log(source);
+        setImageUri(source.uri);
+        setImageName(response.assets[0].fileName);
+      }
+    });
+  };
+
 
   return (
     <View
@@ -111,7 +139,7 @@ function Diary() {
       />
       {/* TITTLE */}
       {/* TAMBAH GAMBAR */}
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handleChoosePhoto}>
         <View style={{paddingHorizontal: 40}}>
           <Image
             source={require('./../assets/image.png')}
@@ -129,6 +157,12 @@ function Diary() {
           />
         </View>
       </TouchableOpacity>
+      {imageUri && (
+                <Image
+                  source={{uri: imageUri}}
+                  style={{width: 200, height: 200, marginBottom: 20}}
+                />
+              )}
       {/* TAMBAH GAMBAR */}
       {/* SAVE */}
       <TouchableOpacity
