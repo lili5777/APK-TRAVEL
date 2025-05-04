@@ -68,8 +68,7 @@ function Destination() {
   function getDestination() {
     db.transaction(tx => {
       tx.executeSql(
-        `SELECT * FROM destinasi ORDER BY id DESC  `, // Hapus LIMIT dan OFFSET
-        [],
+        `SELECT * FROM destinasi ORDER BY id DESC  `,         [],
         (_, results) => {
           const rows = results.rows.raw();
           if (rows.length === 0) {
@@ -113,8 +112,8 @@ function Destination() {
           horizontal={true}
           contentContainerStyle={{height: 150}}
           showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={16} // Agar smooth
-          pagingEnabled={true} // Membuat scroll snap ke tiap halaman
+          scrollEventThrottle={16} 
+          pagingEnabled={true} 
         >
           {images.map((image, index) => (
             <View
@@ -148,7 +147,7 @@ function Destination() {
           return (
             <TouchableOpacity
               key={index}
-              onPress={() => {
+               onPress={() => {
                 navigation.navigate('Details', {
                   dataDestinasi: item,
                 });
@@ -161,15 +160,26 @@ function Destination() {
                 borderRadius: 10,
                 elevation: 10,
                 padding: 10,
+                position: 'relative', 
               }}>
               <Text style={{fontSize: 30, color: '#FAEDCE'}}>{item.judul}</Text>
-              <Text style={{fontSize: 15, color: '#FAEDCE'}}>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: '#FAEDCE',
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                }}>
                 {convertDate(item.tgl_dibuat)}
               </Text>
+
               <Text style={{fontSize: 15, color: '#FAEDCE', marginTop: 10}}>
                 {item.deskripsi}
               </Text>
             </TouchableOpacity>
+
           );
         })}
       </ScrollView>

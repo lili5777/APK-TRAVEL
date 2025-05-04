@@ -51,6 +51,25 @@ function Details({route}) {
     });
   }
 
+  function editData(id) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'UPDATE destinasi SET nama = ?, deskripsi = ? WHERE id = ?',
+      [newNama, newDeskripsi, id],
+      () => {
+        console.log('Data updated successfully!');
+        setTimeout(() => {
+          navigation.navigate('Diary');
+        }, 100);
+      },
+      error => {
+        console.error('Error updating data:', error);
+        setTimeout(() => {}, 1000);
+      }
+      )
+    })
+  }
+
   function convertDate(timestamp) {
     console.log(timestamp);
 
@@ -130,6 +149,25 @@ function Details({route}) {
 
         {/* CATATAN*/}
       </ScrollView>
+      
+      {/* EDIT */}
+      <TouchableOpacity
+        onPress={() => editData(dataDestinasi.id)}
+        style={{
+          width: 75,
+          height: 70,
+          justifyContent: 'center',
+          right: 290,
+          bottom: 20,
+          position: 'absolute',
+        }}>
+        <Image
+          source={require('./../assets/penEdit.png')}
+          style={{height: 65, width: 65}}
+        />
+      </TouchableOpacity>
+      {/* EDIT */}
+
 
       {/* Delete */}
       <TouchableOpacity

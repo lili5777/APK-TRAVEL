@@ -17,6 +17,7 @@ const createUserTables = () => {
   db.transaction(tx => {
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS pengguna (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                gambar TEXT,
                 username TEXT,
                 bio TEXT,
                 nama TEXT,
@@ -29,6 +30,28 @@ const createUserTables = () => {
       error => {
         console.error('Error creating tables:', error);
       },
+    );
+  });
+};
+
+const getAllPengguna = () => {
+  db.transaction(tx => {
+    tx.executeSql(
+      'SELECT * FROM pengguna;',
+      [],
+      (txObj, resultSet) => {
+        const rows = resultSet.rows;
+        const penggunaList = [];
+
+        for (let i = 0; i < rows.length; i++) {
+          penggunaList.push(rows.item(i));
+        }
+
+        console.log('Data pengguna:', penggunaList);
+      },
+      (txObj, error) => {
+        console.error('Error fetching pengguna:', error);
+      }
     );
   });
 };

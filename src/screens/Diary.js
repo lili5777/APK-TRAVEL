@@ -158,11 +158,10 @@ function Diary() {
         </View>
       </TouchableOpacity>
       {imageUri && (
-                <Image
-                  source={{uri: imageUri}}
-                  style={{width: 200, height: 200, marginBottom: 20}}
-                />
-              )}
+      <Image
+        source={{uri: imageUri}}
+        style={{width: 200, height: 200, marginBottom: 20}}
+      />)}
       {/* TAMBAH GAMBAR */}
       {/* SAVE */}
       <TouchableOpacity

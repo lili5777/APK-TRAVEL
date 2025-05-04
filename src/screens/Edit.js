@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import ImageHeader from '../components/ImageHeader';
 import db from '../../database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 function Edit() {
   const navigation = useNavigation();
@@ -18,56 +20,65 @@ function Edit() {
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
   const [nama, setNama] = useState('');
-  const [tgl_lahir, setTgl_lahir] = useState('');
+  const [tglLahir, setTglLahir] = useState('');
   const [contact, setContact] = useState('');
-  const [social_media, setSocial_media] = useState('');
+  const [socialMedia, setSocialMedia] = useState('');
+
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [isLoading, setIsLoading] = useState('');
 
-  const getUsers = setUsername => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'SELECT * FROM pengguna;',
-        [],
-        (_, {rows}) => {
-          let data = [];
-          for (let i = 0; i < rows.length; i++) {
-            data.push(rows.item(i));
-          }
-          setUsers(data);
-        },
-        (_, error) => console.log('Gagal mengambil data', error),
-      );
-    });
+  const [imageUri, setImageUri] = useState(null);
+  const [imageName, setImageName] = useState(null);
+
+
+  const getUsers =async () => {
+    const username = await AsyncStorage.getItem('username');
+    const bio = await AsyncStorage.getItem('bio');
+    const nama = await AsyncStorage.getItem('nama');
+    const tglLahir = await AsyncStorage.getItem('tglLahir');
+    const contact = await AsyncStorage.getItem('contact');
+    const socialMedia = await AsyncStorage.getItem('socialMedia');
+    setUsername(username);
+    setBio(bio);
+    setNama(nama)
+    setTglLahir(tglLahir)
+    setContact(contact)
+    setSocialMedia(socialMedia)
   };
 
-  useEffect(() => {
-    getUsers();
-  } );
-
-  //hanldle Edit
-  function HandleEdit() {
-    saveData({username, bio, nama, tgl_lahir, contact, social_media});
-  }
-  //hanldle Edit
-
-  // SIMPAN DATA REGISTER USER KE DATABASE
-  function saveData(data) {
-    console.log(
-      data.username,
-      data.bio,
-      data.nama,
-      data.tgl_lahir,
-      data.contact,
-      data.social_media,
+  useFocusEffect(
+      useCallback(() => {
+        getUsers();
+      }, []),
     );
 
+
+  // Handle profile
+  function HandleProfile() {
+    saveData({imageUri, username, bio, nama, tgl_lahir, contact, social_media});
+  }
+  // Handle profile
+
+  // SIMPAN DATA PROFILE PENGGUNA KE DATABASE
+  function saveData(data) {
+    if (!data.username) {
+      setIsModalVisible(true); // Show the modal
+      return;
+    }
+
+    const closeModal = () => {
+      setIsModalVisible(false);
+    };
+
     setIsLoading(true);
-    // const currentDate = new Date().toISOString();
+
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO pengguna (username, bio, nama, tgl_lahir, contact, socia_media) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO pengguna (gambar, username, bio, nama, tgl_lahir, contact, social_media) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [
+          data.imageUri,
           data.username,
           data.bio,
           data.nama,
@@ -76,35 +87,72 @@ function Edit() {
           data.social_media,
         ],
         () => {
-          console.log('Data saved successfully!');
+          console.log('Data saved succesfully!');
           setTimeout(() => {
             setIsLoading(false);
-            showAlert();
-            setMessage('Berhasil !');
-            setType('success');
-            navigation.navigate('Login');
-          }, 1000);
+
+            navigation.goBack();
+          }, 100);
         },
         error => {
           console.error('Error saving data:', error);
           setTimeout(() => {
             setIsLoading(false);
-            showAlert();
-            setMessage('Gagal !');
-            setType('error');
           }, 1000);
         },
       );
     });
   }
-  // SIMPAN DATA REGISTER USER KE DATABASE
+  // SIMPAN DATA PROFILE PENGGUNA KE DATABASE
+
+  
+
+  useEffect(() => {
+    getUsers();
+  }, []); // hanya sekali saat komponen pertama kali dimount
+  
+
+  const save = async () => {
+    await AsyncStorage.setItem('imageUri', imageUri || '');
+    await AsyncStorage.setItem('username', username);
+    await AsyncStorage.setItem('bio', bio);
+    await AsyncStorage.setItem('nama', nama);
+    await AsyncStorage.setItem('tglLahir', tglLahir);
+    await AsyncStorage.setItem('contact', contact);
+    await AsyncStorage.setItem('socialMedia', socialMedia);
+    navigation.goBack();
+  };
+
+  const handleChoosePhoto = () => {
+      launchImageLibrary(options, response => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+          Alert.alert('Error', 'Failed to select image.  Please try again.');
+        } else {
+          const source = {uri: response.assets[0].uri};
+          console.log(source);
+          setImageUri(source.uri);
+          setImageName(response.assets[0].fileName);
+        }
+      });
+    };
+
+    const options = {
+      mediaType: 'photo',
+      includeBase64: false,
+      maxHeight: 2000,
+      maxWidth: 2000,
+    };
 
   return (
     <View style={{flex: 1, backgroundColor: '#FAEDCE'}}>
-      <ScrollView>
+      <ScrollView>   
         {/* HEADER */}
         <ImageHeader />
         {/* HEADER */}
+
         {/* FOTO Profile */}
         <View style={{alignItems: 'center', marginVertical: -100}}>
           <View
@@ -117,12 +165,20 @@ function Edit() {
               alignItems: 'center',
               elevation: 50,
             }}>
-            <Text style={{color: 'white', fontWeight: 'bold'}}>Foto</Text>
+            {imageUri ? (
+              <Image
+                source={{uri: imageUri}}
+                style={{width: 160, height: 160, borderRadius: 80}} // Gambar profil berbentuk lingkaran
+              />
+            ) : (
+              <Image source={{uri: imageUri}}/>
+            )}
           </View>
         </View>
         {/* FOTO Profile */}
         {/* EDIT FOTO */}
         <TouchableOpacity
+          onPress={handleChoosePhoto}
           style={{
             alignItems: 'flex-end',
             paddingVertical: 60,
@@ -141,16 +197,22 @@ function Edit() {
             alignItems: 'center',
             marginVertical: -40,
           }}>
-          <Text
+          <TextInput
+            value={username}
+            onChangeText={text => setUsername(text)}
+            placeholder="Username"
+            maxLength={10} // ⬅️ batasi input maksimal 10 karakter
             style={{
               fontSize: 30,
               fontStyle: 'italic',
               fontWeight: 'bold',
-              height: 40,
-            }}>
-            {username ? username : 'username'}
-          </Text>
+              height: 50,
+              width: 131,
+              textAlign: 'center',
+            }}
+          />
         </View>
+
         {/* USERNAME */}
         {/* EDIT */}
 
@@ -160,6 +222,8 @@ function Edit() {
             marginVertical: 30,
           }}>
           <TextInput
+            value={bio}
+            onChangeText={text => setBio(text)}
             placeholder="Edit Bio"
             multiline
             placeholderTextColor={'#949494'}
@@ -184,26 +248,53 @@ function Edit() {
             gap: 30,
             marginVertical: -20,
           }}>
-          <Text style={{fontSize: 20, color: '#555'}}>Nama : <TextInput></TextInput></Text>
-          <Text style={{fontSize: 20, color: '#555'}}>Tanggal Lahir :</Text>
-          <Text style={{fontSize: 20, color: '#555'}}>Contact :</Text>
-          <Text style={{fontSize: 20, color: '#555'}}>Cocial Media :</Text>
-          <Text style={{fontSize: 20, color: '#555'}}>
-            Password : **********
-            {/* GANTI PASSWORD */}
-            <TouchableOpacity onPress={() => navigation.navigate('Password')}>
-              <Text style={{fontSize: 20, color: '#5559'}}>
-                {' '}
-                ( change Password )
-              </Text>
-            </TouchableOpacity>
-            {/* GANTI PASSWORD */}
-          </Text>
+          <View style={{ paddingHorizontal: 30, gap: 40 }}>
+          {/* Nama */}
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontSize: 20, color: '#555', width: 130 }}>Nama                   :</Text>
+            <TextInput
+              value={nama}
+              onChangeText={text => setNama(text)}
+              style={{ fontSize: 20, padding: 0, borderBottomWidth: 1, flex: 1 }}
+            />
+          </View>
+
+          {/* Tanggal Lahir */}
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontSize: 20, color: '#555', width: 130 }}>Tanggal Lahir  :</Text>
+            <TextInput
+              value={tglLahir}
+              onChangeText={text => setTglLahir(text)}
+              style={{ fontSize: 20, padding: 0, borderBottomWidth: 1, flex: 1 }}
+            />
+          </View>
+
+          {/* Contact */}
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontSize: 20, color: '#555', width: 130 }}>Contact              :</Text>
+            <TextInput
+              value={contact}
+              onChangeText={text => setContact(text)}
+              style={{ fontSize: 20, padding: 0, borderBottomWidth: 1, flex: 1 }}
+            />
+          </View>
+
+          {/* Social Media */}
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontSize: 20, color: '#555', width: 130 }}>Social Media    :</Text>
+            <TextInput
+              value={socialMedia}
+              onChangeText={text => setSocialMedia(text)}
+              style={{ fontSize: 20, padding: 0, borderBottomWidth: 1, flex: 1 }}
+            />
+          </View>
+        </View>
+
         </View>
         {/* INFO */}
         {/* Simpan */}
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => save()}
           style={{
             width: 120,
             height: 40,
@@ -211,30 +302,13 @@ function Edit() {
             justifyContent: 'center',
             alignSelf: 'center',
             borderRadius: 10,
-            marginVertical: 35,
+            marginVertical: 80,
           }}>
           <Text style={{fontSize: 22, alignSelf: 'center', color: '#FAEDCE'}}>
             Simpan
           </Text>
         </TouchableOpacity>
         {/* Simpan */}
-        {/* LOG OUT */}
-        <TouchableOpacity
-          onPress={() => navigation.replace('Login')}
-          style={{
-            width: 120,
-            height: 40,
-            backgroundColor: '#727D73',
-            justifyContent: 'center',
-            alignSelf: 'center',
-            borderRadius: 10,
-            marginVertical: -20,
-          }}>
-          <Text style={{fontSize: 22, alignSelf: 'center', color: '#FAEDCE'}}>
-            Log Out
-          </Text>
-        </TouchableOpacity>
-        {/* LOG OUT */}
       </ScrollView>
     </View>
   );
