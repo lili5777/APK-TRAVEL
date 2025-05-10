@@ -38,18 +38,23 @@ function Edit() {
     const username = await AsyncStorage.getItem('username');
     const bio = await AsyncStorage.getItem('bio');
     const nama = await AsyncStorage.getItem('nama');
-    const tglLahir = await AsyncStorage.getItem('tglLahir');
+    const tglLahirString = await AsyncStorage.getItem('tglLahir'); // Get the string
     const contact = await AsyncStorage.getItem('contact');
     const socialMedia = await AsyncStorage.getItem('socialMedia');
     const imageUri = await AsyncStorage.getItem('imageUri');
+
     setUsername(username);
     setBio(bio);
     setNama(nama);
-    setTglLahir(tglLahir);
     setContact(contact);
     setSocialMedia(socialMedia);
     setImageUri(imageUri);
+
+    if (tglLahirString) {
+      setDate(new Date(tglLahirString)); // Convert string back to Date object
+    }
   };
+
 
   useFocusEffect(
     useCallback(() => {
@@ -124,7 +129,7 @@ function Edit() {
       await AsyncStorage.setItem('username', username);
       await AsyncStorage.setItem('bio', bio);
       await AsyncStorage.setItem('nama', nama);
-      await AsyncStorage.setItem('tglLahir', tglLahir);
+      await AsyncStorage.setItem('tglLahir', date.toISOString());
       await AsyncStorage.setItem('contact', contact);
       await AsyncStorage.setItem('socialMedia', socialMedia);
       navigation.goBack();
@@ -263,7 +268,7 @@ function Edit() {
             {/* Nama */}
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text style={{fontSize: 20, color: '#555', width: 130}}>
-                Nama                  :
+                Nama :
               </Text>
               <TextInput
                 value={nama}
@@ -282,25 +287,41 @@ function Edit() {
               <Text style={{fontSize: 20, color: '#555', width: 130}}>
                 Tanggal Lahir :
               </Text>
-              <Button title="Open" onPress={() => setOpen(true)} />
-              <DatePicker
-                modal
-                open={open}
-                date={date}
-                onConfirm={date => {
-                  setOpen(false);
-                  setDate(date);
-                }}
-                onCancel={() => {
-                  setOpen(false);
-                }}
-              />
+              <TouchableOpacity
+                onPress={() => setOpen(true)}
+                style={{
+                  padding: 0,
+                  borderBottomWidth: 1,
+                  flex: 1,
+                  borderColor: 'black',
+                }}>
+                <Text style={{fontSize: 20}}>
+                  {date.toLocaleDateString('id-ID', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </Text>
+              </TouchableOpacity>
             </View>
+            <DatePicker
+              modal
+              open={open}
+              date={date}
+              mode="date"
+              onConfirm={date => {
+                setOpen(false);
+                setDate(date);
+              }}
+              onCancel={() => {
+                setOpen(false);
+              }}
+            />
 
             {/* Contact */}
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text style={{fontSize: 20, color: '#555', width: 130}}>
-                Contact             :
+                Contact :
               </Text>
               <TextInput
                 value={contact}
@@ -317,7 +338,7 @@ function Edit() {
             {/* Social Media */}
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text style={{fontSize: 20, color: '#555', width: 130}}>
-                E-mail                 :
+                E-mail :
               </Text>
               <TextInput
                 value={socialMedia}

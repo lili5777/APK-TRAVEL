@@ -162,7 +162,7 @@ function Destination() {
                 padding: 10,
                 position: 'relative',
               }}>
-              <Text style={{fontSize: 30, color: '#FAEDCE'}}>{item.judul}</Text>
+              <Text numberOfLines={1} style={{fontSize: 30, color: '#FAEDCE', width:'60%'}}>{item.judul}</Text>
 
               <Text
                 style={{
@@ -175,7 +175,7 @@ function Destination() {
                 {convertDate(item.tgl_dibuat)}
               </Text>
 
-              <Text style={{fontSize: 15, color: '#FAEDCE', marginTop: 10}}>
+              <Text numberOfLines={2} style={{fontSize: 15, color: '#FAEDCE', marginTop: 10}}>
                 {item.deskripsi}
               </Text>
             </TouchableOpacity>

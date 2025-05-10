@@ -115,9 +115,9 @@ function Diary() {
       <TextInput
         onChangeText={text => setJudul(text)}
         placeholder="Title"
+        multiline
         placeholderTextColor={'#949494'}
         style={{
-          height: 56,
           fontSize: 40,
           alignSelf: 'flex-start',
           paddingHorizontal: 25,
