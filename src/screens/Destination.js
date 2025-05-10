@@ -68,7 +68,8 @@ function Destination() {
   function getDestination() {
     db.transaction(tx => {
       tx.executeSql(
-        `SELECT * FROM destinasi ORDER BY id DESC  `,         [],
+        `SELECT * FROM destinasi ORDER BY id DESC  `,
+        [],
         (_, results) => {
           const rows = results.rows.raw();
           if (rows.length === 0) {
@@ -100,7 +101,7 @@ function Destination() {
       month: 'long',
       day: 'numeric',
     };
-  
+
     return date.toLocaleDateString('id-ID', options);
   }
 
@@ -112,9 +113,8 @@ function Destination() {
           horizontal={true}
           contentContainerStyle={{height: 150}}
           showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={16} 
-          pagingEnabled={true} 
-        >
+          scrollEventThrottle={16}
+          pagingEnabled={true}>
           {images.map((image, index) => (
             <View
               key={index}
@@ -147,9 +147,9 @@ function Destination() {
           return (
             <TouchableOpacity
               key={index}
-               onPress={() => {
+              onPress={() => {
                 navigation.navigate('Details', {
-                  dataDestinasi: item,
+                  id: item.id,
                 });
               }}
               style={{
@@ -160,7 +160,7 @@ function Destination() {
                 borderRadius: 10,
                 elevation: 10,
                 padding: 10,
-                position: 'relative', 
+                position: 'relative',
               }}>
               <Text style={{fontSize: 30, color: '#FAEDCE'}}>{item.judul}</Text>
 
@@ -179,7 +179,6 @@ function Destination() {
                 {item.deskripsi}
               </Text>
             </TouchableOpacity>
-
           );
         })}
       </ScrollView>

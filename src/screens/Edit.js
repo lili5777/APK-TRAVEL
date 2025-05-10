@@ -8,11 +8,14 @@ import {
   ScrollView,
   Dimensions,
   TextInput,
+  Alert,
 } from 'react-native';
 import ImageHeader from '../components/ImageHeader';
 import db from '../../database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
+import DatePicker from 'react-native-date-picker';
+import {Button} from 'react-native';
 
 function Edit() {
   const navigation = useNavigation();
@@ -24,7 +27,6 @@ function Edit() {
   const [contact, setContact] = useState('');
   const [socialMedia, setSocialMedia] = useState('');
 
-
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [isLoading, setIsLoading] = useState('');
@@ -32,28 +34,28 @@ function Edit() {
   const [imageUri, setImageUri] = useState(null);
   const [imageName, setImageName] = useState(null);
 
-
-  const getUsers =async () => {
+  const getUsers = async () => {
     const username = await AsyncStorage.getItem('username');
     const bio = await AsyncStorage.getItem('bio');
     const nama = await AsyncStorage.getItem('nama');
     const tglLahir = await AsyncStorage.getItem('tglLahir');
     const contact = await AsyncStorage.getItem('contact');
     const socialMedia = await AsyncStorage.getItem('socialMedia');
+    const imageUri = await AsyncStorage.getItem('imageUri');
     setUsername(username);
     setBio(bio);
-    setNama(nama)
-    setTglLahir(tglLahir)
-    setContact(contact)
-    setSocialMedia(socialMedia)
+    setNama(nama);
+    setTglLahir(tglLahir);
+    setContact(contact);
+    setSocialMedia(socialMedia);
+    setImageUri(imageUri);
   };
 
   useFocusEffect(
-      useCallback(() => {
-        getUsers();
-      }, []),
-    );
-
+    useCallback(() => {
+      getUsers();
+    }, []),
+  );
 
   // Handle profile
   function HandleProfile() {
@@ -105,50 +107,59 @@ function Edit() {
   }
   // SIMPAN DATA PROFILE PENGGUNA KE DATABASE
 
-  
-
   useEffect(() => {
     getUsers();
   }, []); // hanya sekali saat komponen pertama kali dimount
-  
 
   const save = async () => {
-    await AsyncStorage.setItem('imageUri', imageUri || '');
-    await AsyncStorage.setItem('username', username);
-    await AsyncStorage.setItem('bio', bio);
-    await AsyncStorage.setItem('nama', nama);
-    await AsyncStorage.setItem('tglLahir', tglLahir);
-    await AsyncStorage.setItem('contact', contact);
-    await AsyncStorage.setItem('socialMedia', socialMedia);
-    navigation.goBack();
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (contact.length < 10) {
+      Alert.alert('Nomor telepon tidak boleh di bawah 10 karakter');
+    } else if (contact.length > 13) {
+      Alert.alert('Nomor telepon tidak boleh di atas 13 karakter');
+    } else if (socialMedia && !emailRegex.test(socialMedia)) {
+      Alert.alert('Format email tidak valid');
+    } else {
+      await AsyncStorage.setItem('imageUri', imageUri || '');
+      await AsyncStorage.setItem('username', username);
+      await AsyncStorage.setItem('bio', bio);
+      await AsyncStorage.setItem('nama', nama);
+      await AsyncStorage.setItem('tglLahir', tglLahir);
+      await AsyncStorage.setItem('contact', contact);
+      await AsyncStorage.setItem('socialMedia', socialMedia);
+      navigation.goBack();
+    }
   };
 
   const handleChoosePhoto = () => {
-      launchImageLibrary(options, response => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-          Alert.alert('Error', 'Failed to select image.  Please try again.');
-        } else {
-          const source = {uri: response.assets[0].uri};
-          console.log(source);
-          setImageUri(source.uri);
-          setImageName(response.assets[0].fileName);
-        }
-      });
-    };
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+        Alert.alert('Error', 'Failed to select image.  Please try again.');
+      } else {
+        const source = {uri: response.assets[0].uri};
+        console.log(source);
+        setImageUri(source.uri);
+        setImageName(response.assets[0].fileName);
+      }
+    });
+  };
 
-    const options = {
-      mediaType: 'photo',
-      includeBase64: false,
-      maxHeight: 2000,
-      maxWidth: 2000,
-    };
+  const options = {
+    mediaType: 'photo',
+    includeBase64: false,
+    maxHeight: 2000,
+    maxWidth: 2000,
+  };
+
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
   return (
     <View style={{flex: 1, backgroundColor: '#FAEDCE'}}>
-      <ScrollView>   
+      <ScrollView>
         {/* HEADER */}
         <ImageHeader />
         {/* HEADER */}
@@ -171,7 +182,7 @@ function Edit() {
                 style={{width: 160, height: 160, borderRadius: 80}} // Gambar profil berbentuk lingkaran
               />
             ) : (
-              <Image source={{uri: imageUri}}/>
+              <Image source={{uri: imageUri}} />
             )}
           </View>
         </View>
@@ -248,48 +259,78 @@ function Edit() {
             gap: 30,
             marginVertical: -20,
           }}>
-          <View style={{ paddingHorizontal: 30, gap: 40 }}>
-          {/* Nama */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 20, color: '#555', width: 130 }}>Nama                   :</Text>
-            <TextInput
-              value={nama}
-              onChangeText={text => setNama(text)}
-              style={{ fontSize: 20, padding: 0, borderBottomWidth: 1, flex: 1 }}
-            />
-          </View>
+          <View style={{paddingHorizontal: 30, gap: 40}}>
+            {/* Nama */}
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={{fontSize: 20, color: '#555', width: 130}}>
+                Nama                  :
+              </Text>
+              <TextInput
+                value={nama}
+                onChangeText={text => setNama(text)}
+                style={{
+                  fontSize: 20,
+                  padding: 0,
+                  borderBottomWidth: 1,
+                  flex: 1,
+                }}
+              />
+            </View>
 
-          {/* Tanggal Lahir */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 20, color: '#555', width: 130 }}>Tanggal Lahir  :</Text>
-            <TextInput
-              value={tglLahir}
-              onChangeText={text => setTglLahir(text)}
-              style={{ fontSize: 20, padding: 0, borderBottomWidth: 1, flex: 1 }}
-            />
-          </View>
+            {/* Tanggal Lahir */}
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={{fontSize: 20, color: '#555', width: 130}}>
+                Tanggal Lahir :
+              </Text>
+              <Button title="Open" onPress={() => setOpen(true)} />
+              <DatePicker
+                modal
+                open={open}
+                date={date}
+                onConfirm={date => {
+                  setOpen(false);
+                  setDate(date);
+                }}
+                onCancel={() => {
+                  setOpen(false);
+                }}
+              />
+            </View>
 
-          {/* Contact */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 20, color: '#555', width: 130 }}>Contact              :</Text>
-            <TextInput
-              value={contact}
-              onChangeText={text => setContact(text)}
-              style={{ fontSize: 20, padding: 0, borderBottomWidth: 1, flex: 1 }}
-            />
-          </View>
+            {/* Contact */}
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={{fontSize: 20, color: '#555', width: 130}}>
+                Contact             :
+              </Text>
+              <TextInput
+                value={contact}
+                onChangeText={text => setContact(text)}
+                style={{
+                  fontSize: 20,
+                  padding: 0,
+                  borderBottomWidth: 1,
+                  flex: 1,
+                }}
+              />
+            </View>
 
-          {/* Social Media */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 20, color: '#555', width: 130 }}>Social Media    :</Text>
-            <TextInput
-              value={socialMedia}
-              onChangeText={text => setSocialMedia(text)}
-              style={{ fontSize: 20, padding: 0, borderBottomWidth: 1, flex: 1 }}
-            />
+            {/* Social Media */}
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={{fontSize: 20, color: '#555', width: 130}}>
+                E-mail                 :
+              </Text>
+              <TextInput
+                value={socialMedia}
+                onChangeText={text => setSocialMedia(text)}
+                style={{
+                  fontSize: 20,
+                  padding: 0,
+                  borderBottomWidth: 1,
+                  flex: 1,
+                }}
+              />
+            </View>
           </View>
-        </View>
-
         </View>
         {/* INFO */}
         {/* Simpan */}

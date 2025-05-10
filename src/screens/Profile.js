@@ -140,7 +140,7 @@ function Profile() {
               <Text style={{ fontSize: 20, color: '#555' }}>{contact}</Text>
             </View>
             <View style={{ flexDirection: 'row' }}>
-              <Text style={{ fontSize: 20, color: '#555', width: 150 }}>Social Media     :</Text>
+              <Text style={{ fontSize: 20, color: '#555', width: 150 }}>E-mail                   :</Text>
               <Text style={{ fontSize: 20, color: '#555' }}>{socialMedia}</Text>
             </View>
           </View>

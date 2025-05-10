@@ -11,6 +11,7 @@ import Diary from './src/screens/Diary';
 import Details from './src/screens/Details';
 import Edit from './src/screens/Edit';
 import SplashScreen from './src/screens/SplashScreen';
+import EditDetails from './src/screens/EditDetails';
 
 const Tab = createBottomTabNavigator();
 
@@ -74,6 +75,7 @@ function RootStack() {
       <Stack.Screen name="Diary" component={Diary} />
       <Stack.Screen name="Details" component={Details} />
       <Stack.Screen name="Edit" component={Edit} />
+      <Stack.Screen name="EditDetails" component={EditDetails} />
     </Stack.Navigator>
   );
 }

@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import {useEffect, useRef, useState} from 'react';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -13,7 +13,7 @@ import {
 import db from '../../database';
 
 function Details({route}) {
-  const {dataDestinasi} = route.params;
+  const {id} = route.params;
   const navigation = useNavigation();
   const width = Dimensions.get('screen').width;
   const scrollViewRef = useRef(null);
@@ -55,19 +55,19 @@ function Details({route}) {
     db.transaction(tx => {
       tx.executeSql(
         'UPDATE destinasi SET nama = ?, deskripsi = ? WHERE id = ?',
-      [newNama, newDeskripsi, id],
-      () => {
-        console.log('Data updated successfully!');
-        setTimeout(() => {
-          navigation.navigate('Diary');
-        }, 100);
-      },
-      error => {
-        console.error('Error updating data:', error);
-        setTimeout(() => {}, 1000);
-      }
-      )
-    })
+        [newNama, newDeskripsi, id],
+        () => {
+          console.log('Data updated successfully!');
+          setTimeout(() => {
+            navigation.navigate('Diary');
+          }, 100);
+        },
+        error => {
+          console.error('Error updating data:', error);
+          setTimeout(() => {}, 1000);
+        },
+      );
+    });
   }
 
   function convertDate(timestamp) {
@@ -81,9 +81,42 @@ function Details({route}) {
       month: 'long',
       day: 'numeric',
     };
-  
+
     return date.toLocaleDateString('id-ID', options);
   }
+
+  const [destinasiDetails, setDestinasiDetails] = useState(null);
+
+  function getDestinationDetails() {
+    db.transaction(tx => {
+      tx.executeSql(
+        `SELECT * FROM destinasi WHERE id=?  `,
+        [id],
+        (_, results) => {
+          const rows = results.rows.raw();
+          if (rows.length === 0) {
+            setDestinasiDetails(null);
+            console.log('tidak ada data');
+            setType('error');
+          } else {
+            console.log('berhasil memuat');
+            setDestinasiDetails(rows[0]);
+            console.log(rows[0]);
+          }
+        },
+        error => {
+          setDestinasi([]);
+          console.error('Error fetching data:', error);
+        },
+      );
+    });
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getDestinationDetails();
+    }, []),
+  );
 
   return (
     <View style={{flex: 1, backgroundColor: '#FAEDCE'}}>
@@ -102,7 +135,9 @@ function Details({route}) {
             marginTop: -13,
           }}
           source={{
-            uri:dataDestinasi.gambar || "https://www.litaofthepack.com/wp-content/uploads/2020/03/FullSizeRender-4.jpg",
+            uri:
+              destinasiDetails?.gambar ||
+              'https://www.litaofthepack.com/wp-content/uploads/2020/03/FullSizeRender-4.jpg',
           }}>
           {/* BACK */}
           <View style={{paddingHorizontal: 15, paddingVertical: 25}}>
@@ -127,7 +162,7 @@ function Details({route}) {
               fontSize: 40,
               height: 50,
             }}>
-            {dataDestinasi?.judul}
+            {destinasiDetails?.judul}
           </Text>
           <Text
             style={{
@@ -135,7 +170,7 @@ function Details({route}) {
               fontSize: 15,
               height: 40,
             }}>
-            {`Tanggal Dibuat: ${convertDate(dataDestinasi.tgl_dibuat)}`}
+            {`Tanggal Dibuat: ${convertDate(destinasiDetails?.tgl_dibuat)}`}
           </Text>
           <Text
             style={{
@@ -143,16 +178,18 @@ function Details({route}) {
               fontSize: 25,
               height: 30,
             }}>
-            {dataDestinasi.deskripsi}
+            {destinasiDetails?.deskripsi}
           </Text>
         </View>
 
         {/* CATATAN*/}
       </ScrollView>
-      
+
       {/* EDIT */}
       <TouchableOpacity
-        onPress={() => editData(dataDestinasi.id)}
+        onPress={() => {
+          navigation.navigate('EditDetails', {destinasiDetails});
+        }}
         style={{
           width: 75,
           height: 70,
@@ -168,10 +205,9 @@ function Details({route}) {
       </TouchableOpacity>
       {/* EDIT */}
 
-
       {/* Delete */}
       <TouchableOpacity
-        onPress={() => DeleteCatatan(dataDestinasi.id)}
+        onPress={() => DeleteCatatan(destinasiDetails?.id)}
         style={{
           width: 75,
           height: 70,
@@ -218,7 +254,13 @@ function Details({route}) {
               shadowRadius: 4,
               elevation: 5,
             }}>
-            <Text style={{marginBottom: 15, textAlign: 'center', fontSize: 18, color:'black'}}>
+            <Text
+              style={{
+                marginBottom: 15,
+                textAlign: 'center',
+                fontSize: 18,
+                color: 'black',
+              }}>
               Apakah Anda yakin ingin menghapus catatan ini?
             </Text>
             <View style={{flexDirection: 'row'}}>
@@ -239,7 +281,7 @@ function Details({route}) {
                   padding: 10,
                   marginHorizontal: 10,
                 }}
-                onPress={() => confirmDelete(dataDestinasi.id)}>
+                onPress={() => confirmDelete(destinasiDetails?.id)}>
                 <Text style={{color: 'white'}}>Hapus</Text>
               </TouchableOpacity>
             </View>
