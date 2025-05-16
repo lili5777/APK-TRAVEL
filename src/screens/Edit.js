@@ -268,9 +268,10 @@ function Edit() {
             {/* Nama */}
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text style={{fontSize: 20, color: '#555', width: 130}}>
-                Nama :
+                Nama                  :
               </Text>
               <TextInput
+                multiline
                 value={nama}
                 onChangeText={text => setNama(text)}
                 style={{
@@ -321,7 +322,7 @@ function Edit() {
             {/* Contact */}
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text style={{fontSize: 20, color: '#555', width: 130}}>
-                Contact :
+                Contact             :
               </Text>
               <TextInput
                 value={contact}
@@ -338,9 +339,10 @@ function Edit() {
             {/* Social Media */}
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text style={{fontSize: 20, color: '#555', width: 130}}>
-                E-mail :
+                E-mail                 :
               </Text>
               <TextInput
+                multiline
                 value={socialMedia}
                 onChangeText={text => setSocialMedia(text)}
                 style={{

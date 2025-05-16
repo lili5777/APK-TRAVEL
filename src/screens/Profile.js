@@ -129,13 +129,13 @@ function Profile() {
           <View style={{paddingHorizontal: 20, gap: 40}}>
             <View style={{flexDirection: 'row'}}>
               <Text style={{fontSize: 20, color: '#555', width: 150}}>
-                Nama :{' '}
+                Nama                       :{' '}
               </Text>
               <Text style={{fontSize: 20, color: '#555'}}>{nama}</Text>
             </View>
             <View style={{flexDirection: 'row'}}>
               <Text style={{fontSize: 20, color: '#555', width: 150}}>
-                Tanggal Lahir :
+                Tanggal Lahir      :
               </Text>
               <Text style={{fontSize: 20, color: '#555'}}>
                 {tglLahir.toLocaleDateString('id-ID', {
@@ -147,13 +147,13 @@ function Profile() {
             </View>
             <View style={{flexDirection: 'row'}}>
               <Text style={{fontSize: 20, color: '#555', width: 150}}>
-                Contact :
+                Contact                  :
               </Text>
               <Text style={{fontSize: 20, color: '#555'}}>{contact}</Text>
             </View>
             <View style={{flexDirection: 'row'}}>
               <Text style={{fontSize: 20, color: '#555', width: 150}}>
-                E-mail :
+                E-mail                     :
               </Text>
               <Text style={{fontSize: 20, color: '#555'}}>{socialMedia}</Text>
             </View>

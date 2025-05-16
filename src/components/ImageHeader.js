@@ -9,7 +9,7 @@ function ImageHeader() {
   const scrollViewRef = useRef(null);
 
   const images = [
-    require('./../assets/bali.png'),
+    require('./../assets/BALI.png'),
     require('./../assets/gambar1.png'),
     require('./../assets/gambar2.png'),
   ];
